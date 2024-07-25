@@ -77,6 +77,12 @@ void redirect(int fd, char *path, int flag) {   // リダイレクト処理を�
   //        入力の場合 O_RDONLY
   //        出力の場合 O_WRONLY|O_TRUNC|O_CREAT
   //
+  close(fd);
+  int nfd = open(path, flag, 0644);
+  if(nfd < 0){
+    perror(path);
+    exit(1);
+  }
 }
 
 void externalCom(char *args[]) {                // 外部コマンドを実行する
@@ -86,6 +92,12 @@ void externalCom(char *args[]) {                // 外部コマンドを実行�
     exit(1);                                    //     非常事態，親を終了
   }
   if (pid==0) {                                 //   子プロセスなら
+    if(ifile != NULL){
+      redirect(0, ifile, O_RDONLY);
+    }   
+    if(ofile != NULL){
+      redirect(1, ofile, O_WRONLY | O_TRUNC | O_CREAT);
+    }                       
     execvp(args[0], args);                      //     コマンドを実行
     perror(args[0]);
     exit(1);
@@ -129,4 +141,41 @@ int main() {
   }
   return 0;
 }
+
+/*
+airaichikawa@AiranoMacBook-Air kadai12-i21itikawa % make
+cc -D_GNU_SOURCE -Wall -std=c99 -o myshell myshell.c
+airaichikawa@AiranoMacBook-Air kadai12-i21itikawa % ./myshell
+Command: ls > a.txt    ファイルa.txtを作成して出力を書き込む
+Command: cat a.txt　　　a.txtの中身を表示
+Makefile
+README.md
+README.pdf
+a.txt
+myshell
+myshell.c
+Command: ls　　　　　　　lsコマンドの実行結果の一致しているか確認
+Makefile	README.pdf	myshell
+README.md	a.txt		myshell.c
+
+Command: echo "hello" > abc.txt  "hello"が書いてある、abc.txtを作成
+Command: ls > abc.txt　　　　　　　　lsの出力をabc.txtにリダイレクト
+Command: cat abc.txt　　　　　すでにあるファイルに上書きができているかテスト
+Makefile
+README.md
+README.pdf
+a.txt
+aaa.txt
+abc.txt
+myshell
+myshell.c
+
+Command: echo "こんにちは" > abc.txt
+Command: sort < abc.txt            ファイルから入力できるか確認する．
+"こんにちは"
+
+エラー表示
+Command: a.txt < xyz.txt
+xyz.txt: No such file or directory
+*/
 
