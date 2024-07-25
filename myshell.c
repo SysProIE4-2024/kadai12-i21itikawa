@@ -146,17 +146,27 @@ int main() {
 airaichikawa@AiranoMacBook-Air kadai12-i21itikawa % make
 cc -D_GNU_SOURCE -Wall -std=c99 -o myshell myshell.c
 airaichikawa@AiranoMacBook-Air kadai12-i21itikawa % ./myshell
-Command: ls > a.txt    ファイルa.txtを作成して出力を書き込む
-Command: cat a.txt　　　a.txtの中身を表示
+Command: ls
+"こんにちは"		README.pdf		abc.txt
+Makefile		a.txt			myshell
+README.md		aaa.txt			myshell.c
+Command: ls > hello.txt         hello.txtを新規制作してlsの内容を書き込む
+Command: cat hello.txt
+"こんにちは"
 Makefile
 README.md
 README.pdf
 a.txt
+aaa.txt
+abc.txt
+hello.txt
 myshell
 myshell.c
-Command: ls　　　　　　　lsコマンドの実行結果の一致しているか確認
-Makefile	README.pdf	myshell
-README.md	a.txt		myshell.c
+Command: ls
+"こんにちは"		a.txt			myshell
+Makefile		aaa.txt			myshell.c
+README.md		abc.txt
+README.pdf		hello.txt
 
 Command: echo "hello" > abc.txt  "hello"が書いてある、abc.txtを作成
 Command: ls > abc.txt　　　　　　　　lsの出力をabc.txtにリダイレクト
@@ -176,6 +186,10 @@ Command: sort < abc.txt            ファイルから入力できるか確認す
 
 エラー表示
 Command: a.txt < xyz.txt
+xyz.txt: No such file or directory
+
+出力リダイレクトが失敗する場合
+Command: xyz.txt > abc.txt
 xyz.txt: No such file or directory
 */
 
